@@ -1,9 +1,10 @@
 import subprocess
+import uuid
 import logging
 import inspect
 import textwrap
 import warnings
-from typing import Callable
+from typing import Callable, Optional
 
 
 class SlurmMultiNodePool:
@@ -15,7 +16,8 @@ class SlurmMultiNodePool:
                  mem_limit: str,
                  email: str,
                  partition: str = 'owners',
-                 python_script_name: str = 'tmp.py',
+                 python_script_name: Optional[str] = None,
+                 slurm_script_name: Optional[str] = None,
                  cpus_per_task: int = 1,
                  ):
         """
@@ -26,7 +28,8 @@ class SlurmMultiNodePool:
         :param mem_limit: the memory limit for the job (be aware this needs to be SLURM compatible) - e.g. 1G
         :param email: the email address to which notifications will be sent
         :param partition: the partition to which the job will be submitted - e.g. normal, owners,...
-        :param python_script_name: the name of the python script that will be created
+        :param python_script_name: the name of the python script that will be created. If None, a random name will be
+            generated.
         """
 
         self.num_tasks = num_tasks
@@ -36,7 +39,12 @@ class SlurmMultiNodePool:
         self.mem_limit = mem_limit
         self.email = email
         self.partition = partition
-        self.slurm_script_name = f"{job_name}.slurm"
+        uid = uuid.uuid4()
+        if slurm_script_name is None:
+            slurm_script_name = f"{job_name}_{uid}.slurm"
+        self.slurm_script_name = slurm_script_name
+        if python_script_name is None:
+            python_script_name = f"{job_name}_{uid}.py"
         self.python_script_name = python_script_name
         self.cpus_per_task = cpus_per_task
 
