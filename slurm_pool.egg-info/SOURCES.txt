@@ -1,0 +1,8 @@
+README.md
+setup.py
+slurm_pool/__init__.py
+slurm_pool/main.py
+slurm_pool.egg-info/PKG-INFO
+slurm_pool.egg-info/SOURCES.txt
+slurm_pool.egg-info/dependency_links.txt
+slurm_pool.egg-info/top_level.txt
